@@ -24,7 +24,16 @@ export class ImportContainer extends Component {
   }
 
   uploadFile = () => {
-    this.props.importUsers(this.props.files, this.refs.connectionId.value);
+    this.props.importUsers(this.props.files, this.refs.connectionId.value, this.refs.upsert.checked);
+  }
+
+  renderUpsertOption() {
+    return (
+      <label>
+        Upsert: 
+        <input type="checkbox" name="upsert" ref="upsert" className="form-control" />
+      </label>
+    );
   }
 
   renderConnectionChooser() {
@@ -68,6 +77,7 @@ export class ImportContainer extends Component {
         <div className="row">
           <div className="col-xs-12">
             {this.renderConnectionChooser()}
+            {this.renderUpsertOption()}
             <ButtonToolbar className="pull-right">
               <Button bsStyle="primary" disabled={currentJob !== null} bsSize="xsmall" onClick={this.uploadFile}>
                 <i className="icon icon-budicon-337" /> Start Importing Users

@@ -4,11 +4,12 @@ import * as constants from '../constants';
 /*
  * Import a file of users to a specific connection.
  */
-export function importUsers(files, connectionId) {
+export function importUsers(files, connectionId, upsert) {
   let jobIndex = -1;
 
   const formData = new FormData();
   formData.connection_id = connectionId;
+  formData.upsert = upsert;
 
   for (let i = 0; i < files.size; i += 1) {
     if (files.get(i).status === 'queued') {
@@ -51,6 +52,7 @@ export function importUsers(files, connectionId) {
 
         const data = new FormData();
         data.append('connection_id', connectionId);
+        data.append('upsert', upsert);
         data.append('users', new Blob([ event.currentTarget.result ], { type: 'application/json' }));
 
         dispatch({
@@ -101,7 +103,7 @@ export function probeImportStatus(jobId) {
           currentJobId: currentJobId,
           onSuccess: (res) => {
             if (res && res.data && res.data.status && res.data.status !== 'pending') {
-              dispatch(importUsers(reducer.get('files'), reducer.get('connectionId')));
+              dispatch(importUsers(reducer.get('files'), reducer.get('connectionId'), reducer.get('upsert')));
             }
           }
         }

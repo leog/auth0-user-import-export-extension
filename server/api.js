@@ -29,7 +29,7 @@ module.exports = (storage) => {
         return next(err);
       }
 
-      jobs.usersImport(fields.connection_id, files.users, storage, req.user.access_token)
+      jobs.usersImport(fields.connection_id, fields.upsert, files.users, storage, req.user.access_token)
         .then(job => res.json(job))
         .catch(next);
     });

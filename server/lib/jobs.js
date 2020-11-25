@@ -5,7 +5,7 @@ const history = require('./history');
 const config = require('./config');
 
 module.exports = {
-  usersImport: (connection, file, storage, token) => {
+  usersImport: (connection, upsert, file, storage, token) => {
     const url = `https://${config('AUTH0_DOMAIN')}/api/v2/jobs/users-imports`;
 
     return new Promise((resolve, reject) => {
@@ -14,6 +14,7 @@ module.exports = {
         .set('accept', 'json')
         .set('Authorization', `Bearer ${token}`)
         .field('connection_id', connection)
+        .field('upsert', upsert)
         .attach('users', file.path)
         .end((err, res) => {
           if (err || !res) {
